@@ -53,6 +53,93 @@ E(k) = -2t\cos(ka).
 This stage verifies the connection between finite-system eigenvalues
 and the bulk energy band.
 
+## Week 2: Bloch States and Band Structure
+
+The second stage of this project studies a one-dimensional periodic
+tight-binding chain and introduces the reciprocal-space description of
+the lattice.
+
+For a periodic chain with \(N\) sites, the boundary condition
+
+\[
+\psi_{n+N} = \psi_n
+\]
+
+requires the allowed wave vectors to satisfy
+
+\[
+e^{ikNa} = 1,
+\]
+
+giving
+
+\[
+k_m =
+\frac{2\pi m}{Na}.
+\]
+
+Because \(k\) and \(k+2\pi/a\) describe the same phase pattern on the
+lattice, the independent wave vectors can be restricted to the first
+Brillouin zone,
+
+\[
+-\frac{\pi}{a}
+\leq k
+<
+\frac{\pi}{a}.
+\]
+
+For nearest-neighbour hopping, the periodic-chain eigenstates are
+Bloch-like states of the form
+
+\[
+\psi_n \propto e^{ikna},
+\]
+
+with the dispersion relation
+
+\[
+E(k) = -2t\cos(ka).
+\]
+
+Numerical diagonalization of the periodic real-space Hamiltonian agrees
+with the analytical energies evaluated at the allowed \(k\) values.
+
+For finite \(N\), only discrete values of \(k\) are allowed. As \(N\)
+increases, the spacing
+
+\[
+\Delta k =
+\frac{2\pi}{Na}
+\]
+
+decreases, and the discrete energy levels become increasingly dense
+along the continuous energy band.
+
+The band extends from
+
+\[
+E_{\min}=-2t
+\]
+
+to
+
+\[
+E_{\max}=2t,
+\]
+
+giving a bandwidth
+
+\[
+W=4t.
+\]
+
+The hopping strength \(t\) controls the energy width of the band, while
+the lattice spacing \(a\) determines the width of the first Brillouin
+zone in reciprocal space.
+
+
+
 ## Current Status
 
 Week 1 completed:
@@ -61,3 +148,12 @@ Week 1 completed:
 - verified eigenvalues and eigenvectors
 - compared numerical and analytical spectra
 - visualized the finite-size approach to the energy band
+
+Week 2 completed:
+- constructed finite periodic-chain Hamiltonians
+- derived the allowed \(k\) values from periodic boundary conditions
+- identified the first Brillouin zone
+- verified numerical and analytical periodic-chain energies
+- plotted the one-dimensional tight-binding band structure
+- visualized finite-\(N\) states on the continuous energy band
+- studied the effects of hopping strength and lattice spacing
