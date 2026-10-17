@@ -676,6 +676,7 @@ $$
 
 in agreement with the analytical gap-closing conditions.
 
+
 For this model, the minimum bulk gap can also be expressed analytically as
 
 $$
@@ -705,12 +706,18 @@ was verified numerically.
 Second, the eigenvalues obtained using `numpy.linalg.eigvalsh` were compared with the analytical expression
 
 $$
-E_\pm(\mathbf{k})=\pm|\mathbf{d}(\mathbf{k})|.
+E_\pm(\mathbf{k})
+=
+\pm|\mathbf{d}(\mathbf{k})|.
 $$
 
 The numerical and analytical eigenvalues agree within floating-point tolerance.
 
-Furthermore, the calculated bulk gap at $m=-1$ agrees with the analytical value $\Delta_{\mathrm{bulk}}=2$.
+Furthermore, the calculated bulk gap at $m=-1$ agrees with the analytical value
+
+$$
+\Delta_{\mathrm{bulk}}(-1)=2.
+$$
 
 The parameter scan also reproduces the three analytically predicted gap-closing points.
 
@@ -742,7 +749,6 @@ However, the bulk energy spectrum alone does not determine the Chern number.
 The topological properties of the different gapped phases will be investigated in Week 6 through Berry curvature and Chern-number calculations.
 
 The present results establish the two-dimensional bulk model and identify the critical parameters required for the subsequent topological analysis.
-
 
 ## Current Status
 
