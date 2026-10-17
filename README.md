@@ -653,14 +653,14 @@ To investigate the effect of the model parameter $m$, the global minimum bulk ga
 
 The minimum gap is defined as
 
-$$
+```math
 \Delta_{\mathrm{bulk}}(m)
 =
 \min_{k_x,k_y}
 \left[
 E_+(k_x,k_y;m)-E_-(k_x,k_y;m)
 \right].
-$$
+```
 
 The parameter $m$ was varied from $-4$ to $4$, using 401 equally spaced values.
 
@@ -678,13 +678,13 @@ in agreement with the analytical gap-closing conditions.
 
 For this model, the minimum bulk gap can also be expressed analytically as
 
-$$
+```math
 \Delta_{\mathrm{bulk}}(m)
 =
 2\min\left\{
 |m+2|,\ |m|,\ |m-2|
 \right\}.
-$$
+```
 
 The calculated gap decreases to zero at each critical parameter and reopens as $m$ moves away from the transition points.
 
@@ -704,11 +704,11 @@ was verified numerically.
 
 Second, the eigenvalues obtained using numpy.linalg.eigvalsh were compared with the analytical expression
 
-$$
+```math
 E_\pm(\mathbf{k})
 =
 \pm|\mathbf{d}(\mathbf{k})|.
-$$
+```
 
 The numerical and analytical eigenvalues agree within floating-point tolerance.
 
@@ -730,12 +730,12 @@ The gap closes when the vector $\mathbf{d}(\mathbf{k})$ vanishes at particular m
 
 For a gapped system, the normalized vector
 
-$$
+```math
 \hat{\mathbf{d}}(\mathbf{k})
 =
 \frac{\mathbf{d}(\mathbf{k})}
 {|\mathbf{d}(\mathbf{k})|}
-$$
+```
 
 is well-defined throughout the Brillouin zone.
 
