@@ -492,6 +492,258 @@ The principal numerical methods include:
 
 Numerical results were checked against analytical expressions, Hermiticity conditions, eigenstate normalization, and finite-size behavior where applicable.
 
+
+## Week 5: Two-Dimensional Chern Insulator
+
+The fifth stage extends the study of topological lattice models from one dimension to two dimensions.
+
+The main objective is to construct a two-dimensional two-band Hamiltonian, investigate its bulk energy spectrum, and identify the parameter values at which the band gap closes and reopens.
+
+### 5.1 Qi-Wu-Zhang Model
+
+We consider the Qi-Wu-Zhang (QWZ) model, a two-dimensional lattice model that exhibits topological phase transitions.
+
+Each unit cell contains two internal degrees of freedom. With the lattice constant and hopping energy scale set to unity, the Bloch Hamiltonian is
+
+$$
+H(\mathbf{k})=
+d_x(\mathbf{k})\sigma_x+
+d_y(\mathbf{k})\sigma_y+
+d_z(\mathbf{k})\sigma_z,
+$$
+
+where $\mathbf{k}=(k_x,k_y)$ and $\sigma_x,\sigma_y,\sigma_z$ are the Pauli matrices.
+
+The components of the vector $\mathbf{d}(\mathbf{k})$ are
+
+$$
+d_x(\mathbf{k})=\sin k_x,
+$$
+
+$$
+d_y(\mathbf{k})=\sin k_y,
+$$
+
+$$
+d_z(\mathbf{k})=m+\cos k_x+\cos k_y,
+$$
+
+where $m$ is a tunable model parameter.
+
+The Hamiltonian can be written explicitly as
+
+$$
+H(k_x,k_y)=
+\begin{pmatrix}
+d_z & d_x-id_y\\
+d_x+id_y & -d_z
+\end{pmatrix}.
+$$
+
+The model is defined over the two-dimensional first Brillouin zone,
+
+$$
+-\pi\leq k_x<\pi,\qquad
+-\pi\leq k_y<\pi.
+$$
+
+### 5.2 Energy Bands and Gap-Closing Conditions
+
+The energy eigenvalues are obtained by solving
+
+$$
+\det[H(\mathbf{k})-EI]=0.
+$$
+
+This gives two energy bands,
+
+$$
+E_\pm(\mathbf{k})
+=\pm\sqrt{d_x^2+d_y^2+d_z^2}.
+$$
+
+Substituting the components of $\mathbf{d}(\mathbf{k})$,
+
+$$
+E_\pm(k_x,k_y)=
+\pm\sqrt{
+\sin^2 k_x+
+\sin^2 k_y+
+(m+\cos k_x+\cos k_y)^2
+}.
+$$
+
+The direct band gap at each momentum is
+
+$$
+\Delta E(\mathbf{k})
+=E_+(\mathbf{k})-E_-(\mathbf{k})
+=2|\mathbf{d}(\mathbf{k})|.
+$$
+
+The gap closes when
+
+$$
+d_x=d_y=d_z=0.
+$$
+
+The first two conditions require
+
+$$
+\sin k_x=\sin k_y=0,
+$$
+
+so the possible gap-closing momenta are
+
+$$
+(k_x,k_y)=(0,0),\ (\pi,0),\ (0,\pi),\ (\pi,\pi),
+$$
+
+where momenta are understood modulo reciprocal lattice vectors.
+
+The remaining condition,
+
+$$
+m+\cos k_x+\cos k_y=0,
+$$
+
+gives the critical parameter values
+
+$$
+\boxed{m_c=-2,\ 0,\ 2}.
+$$
+
+The corresponding gap-closing momenta are:
+
+| Critical parameter | Gap-closing momentum |
+|---|---|
+| $m=-2$ | $(0,0)$ |
+| $m=0$ | $(\pi,0)$ and $(0,\pi)$ |
+| $m=2$ | $(\pi,\pi)$ |
+
+These critical points are possible boundaries between distinct topological phases.
+
+### 5.3 Numerical Band Structure
+
+The QWZ Bloch Hamiltonian was implemented in Python using NumPy.
+
+For each momentum point $(k_x,k_y)$, the $2\times2$ Hermitian Hamiltonian was diagonalized using `numpy.linalg.eigvalsh`.
+
+An $80\times80$ momentum grid was used to sample the two-dimensional Brillouin zone.
+
+The upper and lower energy bands were calculated for $m=-1$ and visualized as three-dimensional energy surfaces.
+
+![QWZ Band Structure](figures/qwz_bands_m_minus1.png)
+
+The two bands are symmetric about zero energy and remain separated throughout the Brillouin zone.
+
+The calculated minimum bulk gap is
+
+$$
+\boxed{\Delta_{\mathrm{bulk}}=2}
+$$
+
+for $m=-1$.
+
+This agrees with the analytical energy dispersion.
+
+### 5.4 Bulk Gap Closing and Reopening
+
+To investigate the effect of the model parameter $m$, the global minimum bulk gap was calculated over the two-dimensional Brillouin zone.
+
+The minimum gap is defined as
+
+$$
+\Delta_{\mathrm{bulk}}(m)
+=
+\min_{k_x,k_y}
+\left[
+E_+(k_x,k_y;m)-E_-(k_x,k_y;m)
+\right].
+$$
+
+The parameter $m$ was varied from $-4$ to $4$, using 401 equally spaced values.
+
+For each parameter value, the minimum energy separation between the two bands was calculated over the momentum grid.
+
+![QWZ Bulk Gap Closing and Reopening](figures/qwz_bulk_gap.png)
+
+The numerical results show that the bulk gap closes at
+
+$$
+m=-2,\quad m=0,\quad m=2,
+$$
+
+in agreement with the analytical gap-closing conditions.
+
+For this model, the minimum bulk gap can also be expressed analytically as
+
+$$
+\Delta_{\mathrm{bulk}}(m)
+=
+2\min\left\{
+|m+2|,\ |m|,\ |m-2|
+\right\}.
+$$
+
+The calculated gap decreases to zero at each critical parameter and reopens as $m$ moves away from the transition points.
+
+These results demonstrate how changing the Hamiltonian parameter can modify the bulk energy spectrum and produce gap-closing transitions.
+
+### 5.5 Numerical Verification
+
+The numerical implementation was checked against the analytical properties of the QWZ Hamiltonian.
+
+First, the Hermiticity condition
+
+$$
+H(\mathbf{k})=H^\dagger(\mathbf{k})
+$$
+
+was verified numerically.
+
+Second, the eigenvalues obtained using `numpy.linalg.eigvalsh` were compared with the analytical expression
+
+$$
+E_\pm(\mathbf{k})=\pm|\mathbf{d}(\mathbf{k})|.
+$$
+
+The numerical and analytical eigenvalues agree within floating-point tolerance.
+
+Furthermore, the calculated bulk gap at $m=-1$ agrees with the analytical value $\Delta_{\mathrm{bulk}}=2$.
+
+The parameter scan also reproduces the three analytically predicted gap-closing points.
+
+These checks support the correctness of the numerical Hamiltonian and energy-spectrum calculations.
+
+### 5.6 Physical Interpretation
+
+The QWZ model demonstrates how a two-dimensional lattice Hamiltonian can undergo bulk gap closing and reopening as a model parameter changes.
+
+The gap closes when the vector $\mathbf{d}(\mathbf{k})$ vanishes at particular momenta in the Brillouin zone.
+
+For a gapped system, the normalized vector
+
+$$
+\hat{\mathbf{d}}(\mathbf{k})
+=
+\frac{\mathbf{d}(\mathbf{k})}
+{|\mathbf{d}(\mathbf{k})|}
+$$
+
+is well-defined throughout the Brillouin zone.
+
+This normalized vector provides a geometric description of the two-band Hamiltonian and plays an important role in characterizing the topology of the occupied band.
+
+A change in the Chern number requires the bulk gap to close during a continuous deformation of the Hamiltonian.
+
+However, the bulk energy spectrum alone does not determine the Chern number.
+
+The topological properties of the different gapped phases will be investigated in Week 6 through Berry curvature and Chern-number calculations.
+
+The present results establish the two-dimensional bulk model and identify the critical parameters required for the subsequent topological analysis.
+
+
 ## Current Status
 
 ### Week 1 — Completed
@@ -537,11 +789,19 @@ Numerical results were checked against analytical expressions, Hermiticity condi
 - Visualized the open-chain energy spectrum and edge probability weights.
 - Investigated the relationship between bulk topology and boundary-localized states.
 
-### Upcoming Stages
 
-**Week 5 — Two-Dimensional Chern Insulator**
+### Week 5 — Completed
 
-Construct a two-dimensional two-band Hamiltonian, calculate bulk energy surfaces, and investigate gap-closing conditions.
+- Constructed the two-dimensional Qi-Wu-Zhang Bloch Hamiltonian.
+- Derived the analytical energy dispersion.
+- Identified the bulk gap-closing conditions.
+- Numerically diagonalized the Hamiltonian over the two-dimensional Brillouin zone.
+- Generated three-dimensional upper and lower energy-band surfaces.
+- Calculated the minimum bulk gap as a function of the model parameter.
+- Verified gap closing at $m=-2$, $m=0$, and $m=2$.
+- Checked Hermiticity and agreement between numerical and analytical eigenvalues.
+- Prepared the model for Berry-curvature and Chern-number calculations.
+
 
 **Week 6 — Berry Curvature and Chern Number**
 
