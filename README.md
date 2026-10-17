@@ -627,7 +627,7 @@ These critical points are possible boundaries between distinct topological phase
 
 The QWZ Bloch Hamiltonian was implemented in Python using NumPy.
 
-For each momentum point $(k_x,k_y)$, the $2\times2$ Hermitian Hamiltonian was diagonalized using `numpy.linalg.eigvalsh`.
+For each momentum point $(k_x,k_y)$, the $2\times2$ Hermitian Hamiltonian was diagonalized using numpy.linalg.eigvalsh.
 
 An $80\times80$ momentum grid was used to sample the two-dimensional Brillouin zone.
 
@@ -676,7 +676,6 @@ $$
 
 in agreement with the analytical gap-closing conditions.
 
-
 For this model, the minimum bulk gap can also be expressed analytically as
 
 $$
@@ -703,7 +702,7 @@ $$
 
 was verified numerically.
 
-Second, the eigenvalues obtained using `numpy.linalg.eigvalsh` were compared with the analytical expression
+Second, the eigenvalues obtained using numpy.linalg.eigvalsh were compared with the analytical expression
 
 $$
 E_\pm(\mathbf{k})
