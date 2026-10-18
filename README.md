@@ -749,6 +749,534 @@ The topological properties of the different gapped phases will be investigated i
 
 The present results establish the two-dimensional bulk model and identify the critical parameters required for the subsequent topological analysis.
 
+
+## Week 6: Berry Curvature and Chern Number
+
+The sixth stage investigates the topological properties of the two-dimensional Qi-Wu-Zhang (QWZ) model through Berry curvature and Chern-number calculations.
+
+The main objective is to characterize the geometry of Bloch eigenstates in momentum space, distinguish topologically trivial and nontrivial insulating phases, and verify the numerical stability and gauge invariance of the calculated topological invariants.
+
+### 6.1 Berry Connection and Berry Curvature
+
+For the two-band QWZ Hamiltonian introduced in Week 5,
+
+$$
+H(\mathbf{k})=
+d_x(\mathbf{k})\sigma_x+
+d_y(\mathbf{k})\sigma_y+
+d_z(\mathbf{k})\sigma_z,
+$$
+
+the normalized Bloch eigenstates satisfy
+
+$$
+H(\mathbf{k})|u_n(\mathbf{k})\rangle
+=
+E_n(\mathbf{k})|u_n(\mathbf{k})\rangle.
+$$
+
+Unlike the energy eigenvalues, the momentum dependence of the eigenvectors contains geometric information about the quantum states.
+
+For an isolated energy band, the Berry connection is defined as
+
+$$
+\mathbf{A}_n(\mathbf{k})
+=
+i\langle u_n(\mathbf{k})|
+\nabla_{\mathbf{k}}u_n(\mathbf{k})\rangle.
+$$
+
+In two dimensions, its components are
+
+$$
+A_x(\mathbf{k})
+=
+i\left\langle u_n\middle|
+\frac{\partial u_n}{\partial k_x}
+\right\rangle,
+$$
+
+$$
+A_y(\mathbf{k})
+=
+i\left\langle u_n\middle|
+\frac{\partial u_n}{\partial k_y}
+\right\rangle.
+$$
+
+The Berry curvature is obtained from the momentum-space derivatives of the Berry connection:
+
+$$
+\boxed{
+\Omega_n(\mathbf{k})
+=
+\frac{\partial A_y}{\partial k_x}
+-
+\frac{\partial A_x}{\partial k_y}
+}.
+$$
+
+The Berry curvature measures the local geometric phase accumulated by a Bloch eigenstate around an infinitesimal closed loop in momentum space.
+
+For a closed path $\mathcal{C}$, the Berry phase is
+
+$$
+\gamma_{\mathcal{C}}
+=
+\oint_{\mathcal{C}}
+\mathbf{A}_n(\mathbf{k})\cdot d\mathbf{k}.
+$$
+
+For a sufficiently small plaquette of area $\Delta k_x\Delta k_y$,
+
+$$
+\gamma_{\square}
+\approx
+\Omega_n(\mathbf{k})
+\Delta k_x\Delta k_y.
+$$
+
+Although the Berry connection depends on the phase convention of the eigenvectors, the Berry curvature is gauge invariant.
+
+Under the gauge transformation
+
+$$
+|u_n(\mathbf{k})\rangle
+\rightarrow
+e^{i\chi(\mathbf{k})}
+|u_n(\mathbf{k})\rangle,
+$$
+
+the Berry connection transforms as
+
+$$
+\mathbf{A}_n
+\rightarrow
+\mathbf{A}_n-\nabla_{\mathbf{k}}\chi,
+$$
+
+while the Berry curvature remains unchanged:
+
+$$
+\boxed{
+\Omega_n'(\mathbf{k})
+=
+\Omega_n(\mathbf{k})
+}.
+$$
+
+The Chern number is defined by integrating the Berry curvature over the entire Brillouin zone:
+
+$$
+\boxed{
+C_n=
+\frac{1}{2\pi}
+\int_{\mathrm{BZ}}
+\Omega_n(\mathbf{k})\,d^2k
+}.
+$$
+
+For an isolated band, the Chern number is an integer-valued topological invariant.
+
+### 6.2 Numerical Calculation Using the FHS Algorithm
+
+The Berry curvature and Chern number were calculated numerically using the Fukui-Hatsugai-Suzuki (FHS) method.
+
+This method computes gauge-invariant Berry fluxes from overlaps between neighboring Bloch eigenvectors, avoiding direct numerical differentiation of eigenvectors with arbitrary phases.
+
+The two-dimensional Brillouin zone was discretized into an $N\times N$ periodic momentum grid:
+
+$$
+k_i=-\pi+\frac{2\pi i}{N},
+\qquad i=0,\ldots,N-1.
+$$
+
+The momentum spacing is
+
+$$
+\Delta k=\frac{2\pi}{N}.
+$$
+
+At each momentum point, the $2\times2$ QWZ Hamiltonian was diagonalized using `numpy.linalg.eigh`.
+
+The normalized eigenvector corresponding to the lower energy band was stored as
+
+$$
+|u_{ij}\rangle
+=
+|u_-(k_i,k_j)\rangle.
+$$
+
+Normalized link variables were constructed from overlaps between neighboring eigenvectors:
+
+$$
+U_x(i,j)=
+\frac{
+\langle u_{ij}|u_{i+1,j}\rangle
+}{
+|\langle u_{ij}|u_{i+1,j}\rangle|
+},
+$$
+
+$$
+U_y(i,j)=
+\frac{
+\langle u_{ij}|u_{i,j+1}\rangle
+}{
+|\langle u_{ij}|u_{i,j+1}\rangle|
+}.
+$$
+
+Periodic boundary conditions were imposed on the momentum-grid indices.
+
+For each elementary plaquette, the gauge-invariant product of link variables is
+
+$$
+\boxed{
+W_{ij}
+=
+U_x(i,j)
+U_y(i+1,j)
+U_x(i,j+1)^*
+U_y(i,j)^*
+}.
+$$
+
+The corresponding discrete Berry flux is
+
+$$
+F_{ij}
+=
+-\operatorname{Arg}(W_{ij}),
+$$
+
+where the negative sign follows from the convention
+
+$$
+\mathbf{A}_n
+=
+i\langle u_n|\nabla_{\mathbf{k}}u_n\rangle.
+$$
+
+The discrete Berry curvature is approximated by
+
+$$
+\Omega_{ij}
+\approx
+\frac{F_{ij}}{(\Delta k)^2}.
+$$
+
+Summing the Berry flux over the Brillouin zone gives the numerical Chern number:
+
+$$
+\boxed{
+C_{\mathrm{FHS}}
+=
+\frac{1}{2\pi}
+\sum_{i,j}F_{ij}
+}.
+$$
+
+The plaquette product is gauge invariant because the arbitrary phase factors associated with neighboring eigenvectors cancel around the closed loop.
+
+The numerical implementation was developed in `src/topology.py`.
+
+### 6.3 Berry Curvature Distribution
+
+The Berry curvature of the lower energy band was calculated over an $80\times80$ momentum grid.
+
+For the QWZ model,
+
+$$
+\mathbf{d}(\mathbf{k})=
+\begin{pmatrix}
+\sin k_x\\
+\sin k_y\\
+m+\cos k_x+\cos k_y
+\end{pmatrix},
+$$
+
+the lower-band Berry curvature can also be expressed analytically as
+
+$$
+\boxed{
+\Omega_-(\mathbf{k})
+=
+\frac{1}{2}
+\hat{\mathbf{d}}\cdot
+\left(
+\frac{\partial\hat{\mathbf{d}}}{\partial k_x}
+\times
+\frac{\partial\hat{\mathbf{d}}}{\partial k_y}
+\right)
+},
+$$
+
+where
+
+$$
+\hat{\mathbf{d}}(\mathbf{k})
+=
+\frac{\mathbf{d}(\mathbf{k})}
+{|\mathbf{d}(\mathbf{k})|}.
+$$
+
+Equivalently,
+
+$$
+\Omega_-(k_x,k_y)
+=
+\frac{
+\sin^2 k_x\cos k_y
++
+\sin^2 k_y\cos k_x
++
+d_z\cos k_x\cos k_y
+}{
+2(d_x^2+d_y^2+d_z^2)^{3/2}
+}.
+$$
+
+Two parameter regimes were investigated.
+
+**Topological phase: $m=-1$**
+
+![Berry Curvature for m=-1](figures/berry_curvature_m-1.0.png)
+
+For $m=-1$, the Berry curvature exhibits a pronounced cross-shaped positive region near the momentum-space coordinate axes.
+
+The corresponding Chern number is
+
+$$
+\boxed{C_-=+1}.
+$$
+
+The nonzero Chern number indicates a topologically nontrivial lower energy band.
+
+**Trivial phase: $m=3$**
+
+![Berry Curvature for m=3](figures/berry_curvature_m3.0.png)
+
+For $m=3$, the Berry curvature remains locally nonzero but contains positive and negative contributions that cancel upon integration over the Brillouin zone.
+
+The resulting Chern number is
+
+$$
+\boxed{C_-=0}.
+$$
+
+This comparison demonstrates that locally nonzero Berry curvature does not necessarily imply nontrivial global band topology.
+
+The distinction is determined by the integrated Berry curvature rather than its value at an individual momentum point.
+
+### 6.4 Chern Number and Topological Phase Transitions
+
+To investigate the topological phase structure of the QWZ model, the mass parameter $m$ was varied from $-3$ to $3$.
+
+For each gapped parameter value, the lower-band Chern number was calculated using the FHS algorithm.
+
+The critical parameter values identified in Week 5 are
+
+$$
+\boxed{m_c=-2,\ 0,\ 2}.
+$$
+
+At these values, the bulk energy gap closes and the Chern number of the isolated lower band becomes undefined.
+
+The numerical phase diagram is shown below.
+
+![QWZ Chern Number Phase Diagram](figures/chern_phase_diagram.png)
+
+The calculated Chern numbers reproduce the expected phase structure:
+
+$$
+\boxed{
+C_-(m)=
+\begin{cases}
+0, & m<-2,\\
++1, & -2<m<0,\\
+-1, & 0<m<2,\\
+0, & m>2.
+\end{cases}
+}
+$$
+
+Representative numerical results are:
+
+| Mass parameter | Numerical Chern number | Phase |
+|---|---|---|
+| $m=-3$ | 0 | Trivial |
+| $m=-1$ | +1 | Topological |
+| $m=1$ | -1 | Topological |
+| $m=3$ | 0 | Trivial |
+
+The Chern number remains constant within each gapped parameter region and changes only at the gap-closing transition points.
+
+This behavior is consistent with the topological invariance of the mapping
+
+$$
+\hat{\mathbf{d}}:T^2\rightarrow S^2.
+$$
+
+For the lower band, the Chern number equals the degree of this mapping under the sign convention adopted in this project.
+
+The numerical results demonstrate that the two-dimensional QWZ model supports distinct topological insulating phases characterized by different integer Chern numbers.
+
+### 6.5 Numerical Verification
+
+Several numerical checks were performed to validate the implementation.
+
+**Gauge Invariance Test**
+
+To verify gauge invariance, an independent random phase was applied to every lower-band eigenvector:
+
+$$
+|u'_{ij}\rangle
+=
+e^{i\chi_{ij}}|u_{ij}\rangle.
+$$
+
+The link variables, plaquette Berry fluxes, and Chern number were then recalculated.
+
+The numerical results were:
+
+| Quantity | Result |
+|---|---|
+| Original Chern number | 1.0 |
+| Gauge-transformed Chern number | 1.0 |
+| Chern number unchanged | True |
+| Berry flux unchanged | True |
+| Maximum Berry flux difference | $3.40\times10^{-16}$ |
+
+The maximum difference in the calculated Berry flux is
+
+$$
+\boxed{
+\max_{i,j}|F'_{ij}-F_{ij}|
+=
+3.40\times10^{-16}
+}.
+$$
+
+This difference is consistent with floating-point rounding error.
+
+The test confirms that the numerical plaquette fluxes and Chern number are invariant under independent local phase transformations of the eigenvectors, within numerical precision.
+
+**Grid Convergence Test**
+
+The Chern number was calculated using three momentum-grid resolutions:
+
+$$
+N=20,\quad 40,\quad 80.
+$$
+
+The results were:
+
+| Grid size | $m=-3$ | $m=-1$ | $m=1$ | $m=3$ |
+|---|---|---|---|---|
+| $20\times20$ | 0 | +1 | -1 | 0 |
+| $40\times40$ | 0 | +1 | -1 | 0 |
+| $80\times80$ | 0 | +1 | -1 | 0 |
+
+All tested grid resolutions produced identical integer Chern numbers for these gapped parameter values.
+
+Since the FHS algorithm yields integer-valued results on a periodic grid under suitable conditions, additional convergence tests were performed for the local Berry curvature.
+
+**Berry Curvature Convergence**
+
+For $m=-1$, the numerical Berry curvature near the center of the Brillouin zone was compared with the analytical expression evaluated at the corresponding plaquette center.
+
+The absolute error is defined as
+
+$$
+\epsilon_N=
+|\Omega_{\mathrm{numerical}}
+-
+\Omega_{\mathrm{analytical}}|.
+$$
+
+The numerical results were:
+
+| Grid size | Numerical curvature | Analytical curvature | Absolute error |
+|---|---|---|---|
+| $20\times20$ | 0.50761234 | 0.49969697 | $7.91538\times10^{-3}$ |
+| $40\times40$ | 0.50201868 | 0.49998099 | $2.03768\times10^{-3}$ |
+| $80\times80$ | 0.50051171 | 0.49999881 | $5.12901\times10^{-4}$ |
+
+The numerical Berry curvature approaches the analytical result as the grid resolution increases.
+
+Doubling the grid resolution reduces the error by approximately a factor of four.
+
+Since
+
+$$
+\Delta k=\frac{2\pi}{N},
+$$
+
+the observed error reduction is consistent with second-order convergence:
+
+$$
+\boxed{
+\epsilon_N\propto(\Delta k)^2
+\propto N^{-2}
+}.
+$$
+
+This local convergence test provides an independent numerical check of the Berry-curvature calculation.
+
+Together, the gauge-invariance and grid-convergence tests support the reliability of the FHS implementation for the investigated gapped parameter regimes.
+
+### 6.6 Physical Interpretation
+
+The calculations demonstrate the distinction between the local geometry of Bloch eigenstates and the global topology of an energy band.
+
+Berry curvature characterizes the local geometric structure of quantum eigenstates in momentum space.
+
+The Chern number is obtained by integrating this curvature over the entire Brillouin zone:
+
+$$
+C_-=
+\frac{1}{2\pi}
+\int_{\mathrm{BZ}}
+\Omega_-(\mathbf{k})\,d^2k.
+$$
+
+For a gapped two-band Hamiltonian, the normalized vector
+
+$$
+\hat{\mathbf{d}}(\mathbf{k})
+=
+\frac{\mathbf{d}(\mathbf{k})}
+{|\mathbf{d}(\mathbf{k})|}
+$$
+
+defines a continuous mapping from the Brillouin-zone torus $T^2$ to the unit sphere $S^2$.
+
+The Chern number measures the degree of this mapping for the lower band.
+
+A continuous deformation of the Hamiltonian cannot change this integer invariant while the bulk energy gap remains open.
+
+When the gap closes,
+
+$$
+|\mathbf{d}(\mathbf{k})|=0,
+$$
+
+the normalized mapping becomes undefined at the degeneracy point, allowing the topological invariant to change across the transition.
+
+The numerical phase diagram verifies this behavior at
+
+$$
+m=-2,\quad m=0,\quad m=2.
+$$
+
+The comparison between $m=-1$ and $m=3$ further demonstrates that two gapped systems can exhibit different global topological properties despite both possessing locally nonzero Berry curvature.
+
+These results establish the relationship between Bloch-state geometry, Berry curvature, and Chern-number quantization in a two-dimensional lattice model.
+
+They also provide the bulk topological characterization required for Week 7, where strip geometries and chiral edge states will be investigated to demonstrate bulk-edge correspondence.
+
+
 ## Current Status
 
 ### Week 1 — Completed
