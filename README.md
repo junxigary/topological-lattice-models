@@ -1297,74 +1297,585 @@ These results establish the relationship between Bloch-state geometry, Berry cur
 They also provide the bulk topological characterization required for Week 7, where strip geometries and chiral edge states will be investigated to demonstrate bulk-edge correspondence.
 
 
+## Week 7: Bulk–Edge Correspondence
 
-## Current Status
+The seventh stage investigates the relationship between the bulk topology of the two-dimensional Qi-Wu-Zhang (QWZ) model and the appearance of boundary-localized electronic states.
 
-### Week 1 — Completed
+The main objective is to demonstrate bulk-edge correspondence by constructing a finite strip Hamiltonian, calculating its energy spectrum, identifying edge-localized eigenstates, and comparing topologically trivial and nontrivial parameter regimes.
 
-- Constructed finite open-chain Hamiltonians.
-- Numerically diagonalized Hermitian Hamiltonians.
-- Verified eigenvalues and eigenvectors.
-- Compared numerical and analytical spectra.
-- Visualized the finite-size approach to the energy band.
+The bulk Chern numbers calculated in Week 6 provide the topological characterization required for this analysis.
 
-### Week 2 — Completed
+### 7.1 Strip Geometry and Boundary Conditions
 
-- Constructed finite periodic-chain Hamiltonians.
-- Derived allowed wave vectors from periodic boundary conditions.
-- Identified the first Brillouin zone.
-- Verified numerical and analytical periodic-chain energies.
-- Plotted the one-dimensional tight-binding band structure.
-- Visualized finite-$N$ states on the continuous energy band.
-- Studied the effects of hopping strength and lattice spacing.
+In Week 5 and Week 6, the QWZ model was studied using periodic boundary conditions in both spatial directions.
 
-### Week 3 — Completed
+To investigate boundary states, the system is now constructed in a strip geometry.
 
-- Constructed the SSH Bloch Hamiltonian with alternating hopping amplitudes.
-- Derived the analytical bulk energy bands.
-- Numerically diagonalized the $2\times2$ Bloch Hamiltonian.
-- Compared band structures for three hopping ratios.
-- Calculated the minimum direct band gap across the parameter range.
-- Demonstrated band-gap closing and reopening at $t_1=t_2$.
-- Verified Hermiticity and agreement between numerical and analytical results.
-- Generated SSH bulk band-structure and band-gap figures.
+Open boundary conditions are imposed along the x direction, while periodic boundary conditions are maintained along the y direction.
 
-### Week 4 — Completed
+The system therefore contains a finite number of unit cells along x but retains translational symmetry along y.
 
-- Expressed the SSH Bloch Hamiltonian using Pauli matrices.
-- Calculated winding numbers in trivial and topological regimes.
-- Visualized winding trajectories in the complex plane.
-- Constructed finite open-chain SSH Hamiltonians.
-- Identified near-zero-energy eigenstates.
-- Calculated and visualized edge-state probability distributions.
-- Constructed left- and right-localized modes using the projected position operator.
-- Derived an effective Hamiltonian for finite-size edge-mode coupling.
-- Compared approximate edge-state energy splitting with numerical eigenvalues.
-- Visualized the open-chain energy spectrum and edge probability weights.
-- Investigated the relationship between bulk topology and boundary-localized states.
+Consequently, the momentum component along y remains a good quantum number, whereas the x direction must be represented using real-space lattice indices.
+
+The original two-dimensional Bloch Hamiltonian is
+
+```math
+H(k_x,k_y)
+=
+\sin k_x\,\sigma_x
++
+\sin k_y\,\sigma_y
++
+(m+\cos k_x+\cos k_y)\sigma_z.
+```
+
+Under strip boundary conditions, the Hamiltonian becomes
+
+```math
+H_{\mathrm{strip}}(k_y).
+```
+
+For a strip containing a finite number of unit cells along x, with two internal degrees of freedom per unit cell, the Hamiltonian dimension is
+
+```math
+\dim H_{\mathrm{strip}}=2N_x.
+```
+
+Numerical calculations were performed using
+
+```math
+N_x=40,
+```
+
+corresponding to an 80-dimensional Hermitian Hamiltonian.
+
+### 7.2 Construction of the Strip Hamiltonian
+
+The strip Hamiltonian was constructed by separating the original Bloch Hamiltonian into onsite and nearest-neighbor coupling terms along the x direction.
+
+The onsite block is
+
+```math
+A(k_y)
+=
+\sin k_y\,\sigma_y
++
+(m+\cos k_y)\sigma_z.
+```
+
+Using the Fourier identities
+
+```math
+\sin k_x
+=
+\frac{e^{ik_x}-e^{-ik_x}}{2i},
+```
+
+```math
+\cos k_x
+=
+\frac{e^{ik_x}+e^{-ik_x}}{2},
+```
+
+the nearest-neighbor coupling block can be expressed as
+
+```math
+T
+=
+\frac{1}{2}
+(\sigma_z-i\sigma_x).
+```
+
+With the convention that T occupies the upper off-diagonal block, the original Bloch Hamiltonian can be reconstructed as
+
+```math
+H(k_x,k_y)
+=
+A(k_y)
++
+Te^{ik_x}
++
+T^\dagger e^{-ik_x}.
+```
+
+The complete strip Hamiltonian is therefore
+
+```math
+H_{\mathrm{strip}}(k_y)
+=
+\begin{pmatrix}
+A & T & 0 & \cdots & 0\\
+T^\dagger & A & T & \cdots & 0\\
+0 & T^\dagger & A & \ddots & 0\\
+\vdots & \vdots & \ddots & \ddots & T\\
+0 & 0 & 0 & T^\dagger & A
+\end{pmatrix}.
+```
+
+Here, each matrix element represents a two-dimensional block acting on the internal degrees of freedom of a unit cell.
+
+The absence of coupling between the first and last unit cells implements open boundary conditions along x.
+
+The Hamiltonian satisfies the Hermiticity condition
+
+```math
+H_{\mathrm{strip}}(k_y)
+=
+H_{\mathrm{strip}}^\dagger(k_y).
+```
+
+The matrix was implemented in `src/strip_geometry.py` and diagonalized using `numpy.linalg.eigh`.
+
+### 7.3 Edge Energy Spectrum
+
+The energy spectrum of the finite strip was calculated by solving the eigenvalue equation
+
+```math
+H_{\mathrm{strip}}(k_y)
+|\psi_n(k_y)\rangle
+=
+E_n(k_y)|\psi_n(k_y)\rangle.
+```
+
+For each momentum value, the 80-dimensional Hamiltonian produces 80 energy eigenvalues.
+
+The resulting energy spectrum was calculated over the first Brillouin zone.
+
+To distinguish bulk-like and boundary-localized eigenstates, the spatial probability distribution of each eigenvector was examined.
+
+The probability associated with the x-th unit cell is defined as
+
+```math
+P_n(x)
+=
+\sum_{\alpha=1}^{2}
+|\psi_{n,x,\alpha}|^2,
+```
+
+where the index alpha labels the two internal degrees of freedom.
+
+The edge probability weight was defined as
+
+```math
+P_{\mathrm{edge}}^{(n)}
+=
+\sum_{x=1}^{n_e}P_n(x)
++
+\sum_{x=N_x-n_e+1}^{N_x}P_n(x).
+```
+
+In the numerical calculations, the number of unit cells included near each boundary was chosen as
+
+```math
+n_e=6.
+```
+
+The edge probability weight measures the fraction of the eigenstate probability concentrated near the two boundaries.
+
+Values close to unity indicate strong boundary localization, whereas smaller values indicate a more extended spatial distribution.
+
+The energy spectrum was plotted with the edge probability weight represented by the color of each eigenstate.
+
+![QWZ Strip Edge Spectrum](figures/qwz_edge_spectrum_m-1.0.png)
+
+For the topological parameter regime,
+
+```math
+m=-1,\qquad C=+1,
+```
+
+the spectrum exhibits two strongly edge-localized branches crossing the bulk energy gap.
+
+These branches have opposite slopes and intersect near zero energy.
+
+The surrounding bulk-like eigenstates form upper and lower energy bands, separated by a finite bulk gap.
+
+The appearance of gap-crossing boundary-localized branches provides numerical evidence for the existence of chiral edge modes.
+
+### 7.4 Edge-State Wavefunction Localization
+
+To verify the spatial character of the states appearing inside the bulk energy gap, representative eigenvectors were selected and their probability distributions were calculated.
+
+The momentum and model parameter were fixed at
+
+```math
+k_y=\frac{\pi}{6},
+\qquad
+m=-1.
+```
+
+At this momentum, two states were identified with energies
+
+```math
+E_L=+0.5,
+```
+
+```math
+E_R=-0.5.
+```
+
+Their spatial probability distributions were computed from the eigenvector components and summed over the two internal degrees of freedom.
+
+![QWZ Edge-State Localization](figures/qwz_edge_localization_m-1.0.png)
+
+The numerical results show that the positive-energy state is strongly localized near the left boundary, while the negative-energy state is strongly localized near the right boundary.
+
+Both states exhibit rapidly decaying probability distributions away from their corresponding boundaries.
+
+The localization can also be understood analytically.
+
+For the selected strip Hamiltonian, the left-edge state has an exponential spatial dependence of the form
+
+```math
+\psi_L(x)\propto r^{x-1},
+```
+
+where
+
+```math
+r=-(m+\cos k_y).
+```
+
+The corresponding probability distribution satisfies
+
+```math
+P_L(x)\propto |r|^{2(x-1)}.
+```
+
+Similarly, the right-edge probability distribution satisfies
+
+```math
+P_R(x)\propto |r|^{2(N_x-x)}.
+```
+
+The edge states are normalizable and localized when
+
+```math
+|r|<1.
+```
+
+For the parameters used in the calculation,
+
+```math
+r
+=
+1-\frac{\sqrt{3}}{2}
+\approx0.133975.
+```
+
+Therefore, the probability ratio between neighboring unit cells is approximately
+
+```math
+\frac{P_L(x+1)}{P_L(x)}
+=
+|r|^2
+\approx0.01795.
+```
+
+This indicates that the probability decreases to approximately 1.8% of its previous value when moving one unit cell into the bulk.
+
+In the semi-infinite approximation, the normalized probability at the first unit cell is
+
+```math
+P_L(1)\approx1-|r|^2.
+```
+
+Substituting the numerical value gives
+
+```math
+P_L(1)\approx0.98205.
+```
+
+This agrees with the pronounced boundary-localized peaks observed in the numerical probability distributions.
+
+The eigenvector analysis therefore confirms that the gap-crossing states identified in the energy spectrum are genuine boundary-localized states rather than extended bulk states.
+
+### 7.5 Chiral Edge-State Dispersion
+
+For the chosen QWZ Hamiltonian and strip convention, the edge-state energy dispersions can be expressed analytically as
+
+```math
+E_L(k_y)=+\sin k_y,
+```
+
+```math
+E_R(k_y)=-\sin k_y.
+```
+
+The localized edge solutions exist in the momentum region satisfying
+
+```math
+|m+\cos k_y|<1.
+```
+
+For the topological phase with the selected mass parameter,
+
+```math
+m=-1,
+```
+
+this condition becomes
+
+```math
+-\frac{\pi}{2}<k_y<\frac{\pi}{2}.
+```
+
+Within this interval, the edge-state branches traverse the bulk energy gap.
+
+At the center of the Brillouin zone,
+
+```math
+k_y=0,
+```
+
+the two edge-state energies satisfy
+
+```math
+E_L(0)=E_R(0)=0.
+```
+
+Numerical diagonalization of the strip Hamiltonian at this momentum gives two near-zero-energy eigenstates.
+
+For the 80-dimensional Hamiltonian, the minimum absolute eigenenergy was
+
+```math
+|E|_{\min}
+\approx
+6.16\times10^{-33}.
+```
+
+Two eigenstates were identified within the near-zero-energy numerical threshold.
+
+The propagation direction of an edge mode is determined by the group velocity,
+
+```math
+v_y
+=
+\frac{1}{\hbar}
+\frac{\partial E}{\partial k_y},
+```
+
+with the momentum convention and lattice units appropriately restored when using physical units.
+
+For the two edge branches,
+
+```math
+\frac{\partial E_L}{\partial k_y}
+=
++\cos k_y,
+```
+
+```math
+\frac{\partial E_R}{\partial k_y}
+=
+-\cos k_y.
+```
+
+Near the zero-energy crossing, the two group velocities have opposite signs.
+
+Consequently, the left- and right-localized edge states propagate in opposite directions along the strip.
+
+This behavior is characteristic of chiral edge modes in a two-dimensional Chern insulator.
+
+### 7.6 Comparison Between Topological and Trivial Phases
+
+To establish the relationship between bulk topology and edge states, the strip spectra were compared for two different mass parameters.
+
+The first parameter corresponds to a topologically nontrivial bulk phase:
+
+```math
+m=-1,\qquad C=+1.
+```
+
+The second parameter corresponds to a topologically trivial bulk phase:
+
+```math
+m=3,\qquad C=0.
+```
+
+For each parameter, the strip Hamiltonian was diagonalized over the Brillouin zone, and the edge probability weight was calculated for every eigenstate.
+
+The resulting spectra are shown below.
+
+![QWZ Topological and Trivial Edge Spectrum Comparison](figures/qwz_edge_spectrum_comparison.png)
+
+For the topological phase, the numerical spectrum exhibits two boundary-localized branches traversing the bulk energy gap.
+
+These branches connect the upper and lower bulk-like energy bands and show strong localization near the opposite boundaries.
+
+For the trivial phase, the spectrum remains gapped, but no corresponding gap-crossing chiral edge branches are observed.
+
+The comparison is summarized below.
+
+| Property | Topological phase | Trivial phase |
+|---|---|---|
+| Mass parameter | -1 | 3 |
+| Bulk Chern number | +1 | 0 |
+| Bulk energy gap | Open | Open |
+| Gap-crossing edge branches | Present | Absent |
+| Boundary-localized chiral modes | Present | Absent in the studied termination |
+
+The results demonstrate that the presence of a bulk energy gap alone does not determine whether a system supports topologically protected boundary modes.
+
+Instead, the global topological invariant of the occupied band distinguishes the two phases.
+
+The absence of gap-crossing edge modes in the trivial regime is consistent with its vanishing bulk Chern number for the chosen boundary termination.
+
+### 7.7 Numerical Verification
+
+Several numerical checks were performed to validate the strip Hamiltonian and edge-state calculations.
+
+**Hamiltonian Dimensions and Hermiticity**
+
+For the selected system size,
+
+```math
+N_x=40,
+```
+
+the Hamiltonian has dimensions
+
+```math
+80\times80.
+```
+
+The numerical Hermiticity condition was verified:
+
+```math
+H_{\mathrm{strip}}
+=
+H_{\mathrm{strip}}^\dagger.
+```
+
+The corresponding numerical test returned `True`.
+
+**Near-Zero-Energy States**
+
+For the topological phase at zero transverse momentum,
+
+```math
+m=-1,\qquad k_y=0,
+```
+
+two near-zero-energy eigenstates were obtained.
+
+Their energies are consistent with the analytical edge-state dispersion.
+
+**Edge-State Localization**
+
+For the momentum
+
+```math
+k_y=\frac{\pi}{6},
+```
+
+the numerical eigenvalues agree with the analytical predictions:
+
+```math
+E_L=+\sin\left(\frac{\pi}{6}\right)=+0.5,
+```
+
+```math
+E_R=-\sin\left(\frac{\pi}{6}\right)=-0.5.
+```
+
+The edge probability weights calculated over the six unit cells nearest the corresponding boundaries were approximately unity.
+
+The probability distributions also agree with the expected exponential localization.
+
+**Bulk Chern Number Verification**
+
+The bulk Chern numbers were recalculated using the FHS algorithm developed in Week 6.
+
+The numerical results reproduce
+
+```math
+C(-1)=+1,
+```
+
+```math
+C(3)=0.
+```
+
+**Trivial-Phase Spectrum Check**
+
+For the trivial phase, no near-zero-energy states were found at zero transverse momentum.
+
+The corresponding numerical verification confirmed
+
+```math
+\min_n |E_n(k_y=0;m=3)|>1.
+```
+
+These calculations support the consistency of the bulk topological characterization, finite-strip energy spectra, and spatial localization of the edge states.
+
+### 7.8 Physical Interpretation and Bulk–Edge Correspondence
+
+The results establish a numerical connection between the bulk Chern number and the appearance of chiral boundary modes in the two-dimensional QWZ model.
+
+In Week 6, the bulk topology was characterized using the Chern number,
+
+```math
+C
+=
+\frac{1}{2\pi}
+\int_{\mathrm{BZ}}
+\Omega(\mathbf{k})\,d^2k.
+```
+
+For the topological parameter regime,
+
+```math
+C=+1,
+```
+
+the strip geometry exhibits gap-crossing edge branches whose eigenvectors are localized near the opposite boundaries.
+
+The corresponding group velocities have opposite signs, indicating counterpropagating modes on the two different edges.
+
+For the trivial parameter regime,
+
+```math
+C=0,
+```
+
+the strip remains gapped and does not exhibit the corresponding protected gap-crossing chiral edge modes.
+
+The bulk-edge correspondence relates the bulk Chern number to the net number of chiral edge branches, with the sign determined by the edge orientation and the Hamiltonian convention.
+
+In a finite strip, the two spatially separated boundaries support modes propagating in opposite directions.
+
+The numerical calculations therefore provide evidence for the relationship
+
+```math
+\boxed{
+\text{Nonzero bulk Chern number}
+\Longrightarrow
+\text{Chiral boundary modes}
+}.
+```
+
+More precisely, the Chern number determines the net chirality of the boundary modes, rather than the total number of possible boundary-localized eigenstates.
+
+The combined results from Week 5, Week 6, and Week 7 establish the following physical sequence:
+
+```math
+\boxed{
+H(\mathbf{k})
+\longrightarrow
+E_n(\mathbf{k})
+\longrightarrow
+\text{Band-gap closing}
+\longrightarrow
+C
+\longrightarrow
+\text{Chiral edge states}
+}.
+```
+
+The study demonstrates how a topological invariant calculated from an infinite periodic bulk Hamiltonian predicts observable boundary properties when open boundaries are introduced.
+
+Together with the one-dimensional SSH calculations from Week 3 and Week 4, these results provide a numerical investigation of topological phases and bulk-boundary correspondence in both one-dimensional and two-dimensional quantum lattice models.
 
 
-### Week 5 — Completed
 
-- Constructed the two-dimensional Qi-Wu-Zhang Bloch Hamiltonian.
-- Derived the analytical energy dispersion.
-- Identified the bulk gap-closing conditions.
-- Numerically diagonalized the Hamiltonian over the two-dimensional Brillouin zone.
-- Generated three-dimensional upper and lower energy-band surfaces.
-- Calculated the minimum bulk gap as a function of the model parameter.
-- Verified gap closing at $m=-2$, $m=0$, and $m=2$.
-- Checked Hermiticity and agreement between numerical and analytical eigenvalues.
-- Prepared the model for Berry-curvature and Chern-number calculations.
-
-
-**Week 6 — Berry Curvature and Chern Number**
-
-Numerically calculate Berry curvature and Chern numbers to distinguish two-dimensional topological phases.
-
-**Week 7 — Bulk-Edge Correspondence**
-
-Construct a strip Hamiltonian and investigate chiral edge modes in a two-dimensional topological system.
-
-**Week 8 — Final Documentation and Report**
-
-Complete numerical verification, organize project figures, and prepare a short research report summarizing the models, methods, results, and physical interpretation.
