@@ -946,9 +946,7 @@ U_y(i,j)^*
 The corresponding discrete Berry flux is
 
 ```math
-F_{ij}
-=
--\operatorname{Arg}(W_{ij}),
+F_{ij}=-\mathrm{Arg}(W_{ij}).
 ```
 
 where the negative sign follows from the convention
